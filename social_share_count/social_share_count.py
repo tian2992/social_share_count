@@ -3,6 +3,7 @@ import os
 import flask
 from flask import request
 from flask import jsonify
+from flask_cors import CORS
 from urllib.parse import quote
 import twitter
 
@@ -28,6 +29,7 @@ tw_api.VerifyCredentials()
 
 
 app = flask.Flask(__name__)
+CORS(app)
 
 def format_url(url):
     triml = url.lstrip("https://")
