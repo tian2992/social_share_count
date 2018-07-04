@@ -60,7 +60,7 @@ def fetch_twitter_shares():
         db_session.add(m)
         db_session.commit()
     except:
-        logging.exception('Twitter fetch Fail')
+        logging.error('Twitter fetch Fail')
         shares = -1
     resp = {"url":url_clean, "count": shares}
     return jsonify(resp)
