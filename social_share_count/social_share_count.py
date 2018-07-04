@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 import os
+import logging
 import flask
 from flask import request
 from flask import jsonify
 from flask_cors import CORS
 from urllib.parse import quote
 import twitter
+from social_share_count.database import init_db, db_session
+from social_share_count.models import Metrique
 
 """Main module."""
 
@@ -27,7 +30,7 @@ tw_api = twitter.Api(consumer_key=CONSUMER_KEY,
                       access_token_secret=ACCESS_TOKEN_SECRET)
 tw_api.VerifyCredentials()
 
-
+init_db()
 app = flask.Flask(__name__)
 CORS(app)
 
@@ -51,7 +54,13 @@ def fetch_twitter_shares():
     url_clean = format_url(url_query)
     try:
         shares = get_twitter_shares(url_clean)
+        m = Metrique(service="twitter_tweets",
+                     url=url_clean,
+                     value=shares)
+        db_session.add(m)
+        db_session.commit()
     except:
+        logging.exception('Twitter fetch Fail')
         shares = -1
     resp = {"url":url_clean, "count": shares}
     return jsonify(resp)
