@@ -11,7 +11,7 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = ['Flask','python-twitter','gunicorn', 'flask-cors', sqlalchemy]
+requirements = ['Flask','python-twitter','gunicorn', 'flask-cors', 'sqlalchemy']
 
 setup_requirements = ['pytest-runner', ]
 
