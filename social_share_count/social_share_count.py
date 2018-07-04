@@ -9,6 +9,8 @@ from urllib.parse import quote
 import twitter
 from social_share_count.database import init_db, db_session
 from social_share_count.models import Metrique
+from flask_caching import Cache
+
 
 """Main module."""
 
@@ -33,6 +35,7 @@ tw_api.VerifyCredentials()
 init_db()
 app = flask.Flask(__name__)
 CORS(app)
+cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
 def format_url(url):
     triml = url.lstrip("https://")
@@ -42,6 +45,7 @@ def format_url(url):
     return ""
 
 
+@cache.memoize(3600)
 def get_twitter_shares(uri):
     query = "count=100&q={}".format(quote(uri, safe=''))
     results = tw_api.GetSearch(raw_query=query)
